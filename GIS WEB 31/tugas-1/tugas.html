@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tugas GIS</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <script>
+    // Inisialisasi Peta
+    var map = L.map("map").setView([-0.056, 109.375], 15);
+    var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "© OpenStreetMap",
+    }).addTo(map);
+
+    // Icon Marker Merah untuk Rumah
+    var redIcon = L.divIcon({
+      className: "",
+      html: `<svg width="26" height="42" viewBox="0 0 26 42" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));">
+                <path d="M13 0C5.82 0 0 5.82 0 13C0 22.75 13 42 13 42C13 42 26 22.75 26 13C26 5.82 20.18 0 13 0Z" fill="#E53935"/>
+                <circle cx="13" cy="13" r="6" fill="#FFFFFF"/>
+                <circle cx="13" cy="13" r="3.5" fill="#B71C1C"/>
+            </svg>`,
+      iconSize: [26, 42],
+      iconAnchor: [13, 42],
+      popupAnchor: [0, -38],
+    });
+
+    // Marker Rumah (Warna Merah)
+    var markerRumah = L.marker([-0.057515986631119696, 109.37712992972268], {
+      icon: redIcon,
+    }).addTo(map);
+    markerRumah
+      .bindPopup("<b>Rumah</b><br>Titik Awal (Warna Merah)")
+      .openPopup();
+    // 3 Marker Minimarket (Warna Biru Standar Leaflet)
+    var markerAlfamart1 = L.marker([
+      -0.056902739148692906, 109.37550267627515,
+    ]).addTo(map);
+    markerAlfamart1.bindPopup("<b>Alfamart 1</b>");
+
+    var markerAlfamart2 = L.marker([
+      -0.06047343809034878, 109.37811843465376,
+    ]).addTo(map);
+    markerAlfamart2.bindPopup("<b>Alfamart 2</b>");
+
+    var markerIndomaret = L.marker([
+      -0.050132537150658976, 109.37046664895149,
+    ]).addTo(map);
+    markerIndomaret.bindPopup("<b>Indomaret</b>");
+
+    // Polyline - Rute Jalan Raya (Warna Biru Terang, Selalu di Badan Jalan)
+    var polyline = L.polyline(
+      [
+        // Dari Rumah menyusuri Gang Permata Kapuas keluar ke Jl. Tanjung Raya II hingga Alfamart 2
+        [
+          [-0.057516, 109.37713],
+          [-0.057795, 109.376683],
+          [-0.058126, 109.376167],
+          [-0.058589, 109.376535],
+          [-0.059334, 109.377097],
+          [-0.059811, 109.377472],
+          [-0.060414, 109.377964],
+        ],
+        // Dari simpang gang menyusuri Jl. Tanjung Raya II ke Alfamart 1 dan Indomaret
+        [
+          [-0.058126, 109.376167],
+          [-0.057533, 109.375735],
+          [-0.057118, 109.375445],
+          [-0.05692, 109.375298],
+          [-0.056544, 109.37504],
+          [-0.055732, 109.374473],
+          [-0.05443, 109.373596],
+          [-0.052926, 109.372566],
+          [-0.052132, 109.371899],
+          [-0.05088, 109.370847],
+          [-0.050338, 109.37042],
+          [-0.05018, 109.37029],
+        ],
+      ],
+      {
+        color: "#00d2ff",
+        weight: 5,
+        opacity: 0.8,
+      },
+    ).addTo(map);
+    polyline.bindPopup("<b>Rute Jalan Raya</b>");
+
+    // Polygon - Area Parkir Halaman Depan Alfamart 1 (Warna Biru Gelap, Pas di Depan Ruko Tanpa Kena Jalan)
+    var parkirAlfamart1 = L.polygon(
+      [
+        [-0.05687, 109.37542],
+        [-0.05685, 109.37547],
+        [-0.05694, 109.37549],
+        [-0.05696, 109.37544],
+      ],
+      {
+        color: "#001a4d",
+        fillColor: "#002b80",
+        fillOpacity: 0.7,
+        weight: 2,
+      },
+    ).addTo(map);
+    parkirAlfamart1.bindPopup("<b>Area Parkir Alfamart 1</b>");
+
+    // Polygon - Area Parkir Halaman Depan Alfamart 2 (Warna Biru Gelap, Pas di Depan Ruko Tanpa Kena Jalan)
+    var parkirAlfamart2 = L.polygon(
+      [
+        [-0.06042, 109.37805],
+        [-0.0604, 109.37809],
+        [-0.06048, 109.37811],
+        [-0.0605, 109.37807],
+      ],
+      {
+        color: "#001a4d",
+        fillColor: "#002b80",
+        fillOpacity: 0.7,
+        weight: 2,
+      },
+    ).addTo(map);
+    parkirAlfamart2.bindPopup("<b>Area Parkir Alfamart 2</b>");
+
+    // Polygon - Area Parkir Halaman Depan Indomaret (Warna Biru Gelap, Pas di Depan Ruko Tanpa Kena Jalan)
+    var parkirIndomaret = L.polygon(
+      [
+        [-0.05016581220622698, 109.3704297803558],
+        [-0.05019709149234463, 109.37039062079778],
+        [-0.05013997173721283, 109.37034156498699],
+        [-0.05010143921576176, 109.37039222942856],
+      ],
+      {
+        color: "#001a4d",
+        fillColor: "#002b80",
+        fillOpacity: 0.7,
+        weight: 2,
+      },
+    ).addTo(map);
+    parkirIndomaret.bindPopup("<b>Area Parkir Indomaret</b>");
+  </script>
+</body>
+
+</html>

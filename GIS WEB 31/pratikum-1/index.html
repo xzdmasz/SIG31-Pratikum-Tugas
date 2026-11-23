@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([-0.056, 109.349], 14);
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Marker UMP
+        var markerUMP = L.marker([-0.05943479143084074, 109.35198317084611]).addTo(map);
+        markerUMP.bindPopup("<b>UMP</b><br>Universitas Muhammadiyah Pontianak").openPopup();
+
+        // Marker Polnep
+        var markerPolnep = L.marker([-0.053555821504878774, 109.34705708020974]).addTo(map);
+        markerPolnep.bindPopup("<b>Polnep</b><br>Politeknik Negeri Pontianak");
+
+        // Polyline - Rute dari UMP ke Polnep
+        var polyline = L.polyline([
+
+            [-0.05916972278961896, 109.35255552284593],
+            [-0.05849333407758027, 109.35201933088652],
+            [-0.057853839313247134, 109.35145116409086],
+            [-0.057853839313247134, 109.35145116409086],
+            [-0.055616502239471, 109.34958398483376],
+            [-0.05555481146235725, 109.34925139093069],
+            [-0.05520344225237314, 109.34914678478376],
+            [-0.054734055889241955, 109.34890270376145],
+            [-0.053836385547779496, 109.34813606871313],
+            [-0.05392742269853193, 109.34792744182228]
+        ], {
+            color: 'maroon',
+            weight: 4,
+            opacity: 0.7
+        }).addTo(map);
+
+        // Polygon - Gedung Utama UMP (Barat)
+        var gedungUtamaBarat = L.polygon([
+            [-0.05957914618969051, 109.35253635080537],
+            [-0.059829498329060184, 109.35226134263107],
+            [-0.05913913333592723, 109.35151218243206],
+            [-0.058985417153883696, 109.35166548474189],
+            [-0.05948295584405435, 109.35219233933397],
+            [-0.059387708168847676, 109.35230139107603]
+        ], {
+            color: '#8B4513',
+            fillColor: '#D2691E',
+            fillOpacity: 0.6,
+            weight: 2
+        }).addTo(map);
+        gedungUtamaBarat.bindPopup("<b>Gedung Utama UMP (Barat)</b><br>Fakultas & Ruang Kuliah");
+
+        // Polygon - Gedung Tengah UMP
+        var gedungTengah = L.polygon([
+            [-0.05913913333592723, 109.35151218243206],
+            [-0.058985417153883696, 109.35166548474189],
+            [-0.058700, 109.35140000000000],
+            [-0.058850, 109.35125000000000]
+        ], {
+            color: '#8B4513',
+            fillColor: '#CD853F',
+            fillOpacity: 0.6,
+            weight: 2
+        }).addTo(map);
+        gedungTengah.bindPopup("<b>Gedung Tengah UMP</b><br>Ruang Administrasi");
+
+        // Polygon - Gedung Timur UMP
+        var gedungTimur = L.polygon([
+            [-0.05948295584405435, 109.35219233933397],
+            [-0.059387708168847676, 109.35230139107603],
+            [-0.059100, 109.35205000000000],
+            [-0.059200, 109.35190000000000]
+        ], {
+            color: '#8B4513',
+            fillColor: '#DEB887',
+            fillOpacity: 0.6,
+            weight: 2
+        }).addTo(map);
+        gedungTimur.bindPopup("<b>Gedung Timur UMP</b><br>Laboratorium & Perpustakaan");
+
+        // Polygon - Masjid UMP
+        var masjidUMP = L.polygon([
+            [-0.05916369825657754, 109.35189293565615],
+            [-0.05899935444142845, 109.35183879533894],
+            [-0.05917530528610471, 109.35192993539098],
+            [-0.059058848611986875, 109.35197297374889],
+            [-0.0590966339067578, 109.35179569229956],
+        ], {
+            color: 'green',
+            fillColor: '#90EE90',
+            fillOpacity: 0.7,
+            weight: 2
+        }).addTo(map);
+        masjidUMP.bindPopup("<b>Masjid UMP</b><br>Masjid Universitas Muhammadiyah Pontianak");
+
+        // Polygon - Area Parkir
+        var areaParkir = L.polygon([
+            [-0.059829498329060184, 109.35226134263107],
+            [-0.059950, 109.35215000000000],
+            [-0.059650, 109.35185000000000],
+            [-0.059520, 109.35200000000000]
+        ], {
+            color: 'gray',
+            fillColor: '#C0C0C0',
+            fillOpacity: 0.4,
+            weight: 2,
+            dashArray: '5, 5'
+        }).addTo(map);
+        areaParkir.bindPopup("<b>Area Parkir UMP</b>");
+
+        // Circle - Area Kampus UMP
+        var circle = L.circle([-0.055199, 109.349495], {
+            color: 'blue',
+            fillColor: '#30a3dc',
+            fillOpacity: 0.3,
+            radius: 200
+        }).addTo(map);
+
+        circle.bindPopup("<b>Area Kampus UMP</b><br>Radius 200 meter");
+    </script>
+</body>
+
+</html>

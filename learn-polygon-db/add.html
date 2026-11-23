@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Polygon</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <style>
+        #map {
+            width: 640px;
+            height: 360px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <form action="process-add.php" method="post">
+        <label>Name
+            <input type="text" name="name" id="name">
+        </label>
+        <br>
+        <label>Coordinates
+            <textarea name="wkt_polygon" id="wkt_polygon"></textarea>
+        </label>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        let center = [-0.055495094034760356, 109.34949626784648];
+        var map = L.map('map').setView(center, 17);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        let markers = [];
+        let polygonLayer = null;
+
+        const wktInput = document.getElementById('wkt_polygon');
+
+        map.on('click', function(e){
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+
+            const marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+            markers.push(marker);
+
+            marker.on('drag', updatePolygon);
+
+            marker.on('contextmenu', function(){
+                map.removeLayer(marker);
+                markers = markers.filter(m => m !== marker);
+                updatePolygon();
+            });
+
+            updatePolygon();
+        });
+
+        function updatePolygon() {
+            const coordinates = markers.map(marker => {
+                const position = marker.getLatLng();
+                return [position.lat, position.lng];
+            });
+
+            if(coordinates.length >= 3) {
+                if(polygonLayer) { map.removeLayer(polygonLayer); }
+
+                polygonLayer = L.polygon(coordinates).addTo(map);
+
+                const wktPoints = coordinates.map(pt => `${pt[0]} ${pt[1]}`);
+                wktPoints.push(`${coordinates[0][0]} ${coordinates[0][1]}`);
+                const wktString = `POLYGON((${wktPoints.join(', ')}))`;
+                wktInput.value = wktString;
+            }
+        }
+    </script>
+</body>
+</html>

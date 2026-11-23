@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas GeoJSON</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // Inisialisasi peta, center di Pontianak
+        var map = L.map('map').setView([-0.05, 109.35], 14);
+
+        // Tile Layer OpenStreetMap
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // ============================================================
+        // 1. Variable SPBUPoint - 3 Marker SPBU
+        // ============================================================
+        // Format GeoJSON coordinates: [Longitude, Latitude]
+        var SPBUPoint = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": { "name": "SPBU Saigon" },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.36878582619175, -0.04869440798361439]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "SPBU Imbon" },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.35439707006368, -0.046656056174173816]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "SPBU Adisucipto" },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.36259154292982, -0.055485988338086316]
+                    }
+                }
+            ]
+        };
+
+        // ============================================================
+        // 2. Variable geovPoint - 3 Marker Kantor Dinas
+        // ============================================================
+        var geovPoint = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Dinas Kesehatan Kota Pontianak" },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.34201971151673, -0.04652022805302473]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Dinas Kependudukan Dan Pencatatan Sipil Kota Pontianak" },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.3410326585819, -0.04759311127626863]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Dinas Pekerjaan Umum Kota Pontianak" },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.34218067582049, -0.04609964498705456]
+                    }
+                }
+            ]
+        };
+
+        // ============================================================
+        // 3. Variable mosquePOints - 3 Marker Mushola/Masjid
+        // ============================================================
+        var mosquePOints = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Masjid Hudarahman" },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.37867197726482, -0.06020147189940922]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Masjid Al Muhajirin" },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.35480536172669, -0.04651328591182854]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Masjid At-Taqwa" },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.37389450894521, -0.053815833896253745]
+                    }
+                }
+            ]
+        };
+
+        // ============================================================
+        // 4. Fungsi hover: ketika cursor hover, tampil nama entitas
+        // ============================================================
+        function hoverPopup(feature, layer) {
+            if (feature.properties && feature.properties.name) {
+                layer.bindTooltip(feature.properties.name, {
+                    permanent: false,
+                    direction: 'top',
+                    offset: [0, -10]
+                });
+            }
+        }
+
+        // Tampilkan semua marker ke peta dengan hover tooltip
+        L.geoJSON(SPBUPoint, { onEachFeature: hoverPopup }).addTo(map);
+        L.geoJSON(geovPoint, { onEachFeature: hoverPopup }).addTo(map);
+        L.geoJSON(mosquePOints, { onEachFeature: hoverPopup }).addTo(map);
+    </script>
+</body>
+
+</html>

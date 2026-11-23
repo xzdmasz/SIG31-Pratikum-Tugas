@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar GeoJSON - Leaflet</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <!-- Leaflet JS Library (Wajib ada sebelum script Leaflet dijalankan) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // Membuat variabel untuk menampung koordinat tengah peta
+        // Format Leaflet: [Latitude, Longitude]
+        var center = [-0.059448502216176195, 109.35201419339587];
+
+        // Inisialisasi peta dan fokuskan langsung ke UM Pontianak dengan zoom 16
+        var map = L.map('map').setView(center, 16);
+
+        // Menambahkan tile layer dari OpenStreetMap
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19, // Membatasi user melakukan zoom di peta
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // 1. Variabel GeoJSON untuk 1 Point (UM Pontianak)
+        // PENTING: Format GeoJSON adalah [Longitude, Latitude] (Bujur dulu baru Lintang!)
+        var pointGeoJSON = {
+            "type": "Feature",
+            "properties": {
+                "name": "Universitas Muhammadiyah Pontianak"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [109.35201419339587, -0.059448502216176195] // [Bujur/Lng, Lintang/Lat]
+            }
+        };
+
+        // Tampilkan Marker UM Pontianak dan tambahkan popup
+        L.geoJSON(pointGeoJSON, {
+            onEachFeature: function (feature, layer) {
+                if (feature.properties && feature.properties.name) {
+                    layer.bindPopup("<b>" + feature.properties.name + "</b>").openPopup();
+                }
+            }
+        }).addTo(map);
+
+        // 2. Variabel GeoJSON untuk sejumlah koordinat (FeatureCollection)
+        var pointsGeoJSON = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "name": "Indomaret"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.3533, -0.0569] // [Lng, Lat]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "name": "Alfamart"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.3510, -0.0595] // [Lng, Lat]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "name": "Citra Mart"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [109.3513, -0.0571] // [Lng, Lat]
+                    }
+                }
+            ]
+        };
+
+        // Tampilkan Marker dari pointsGeoJSON (Indomaret, Alfamart, Citra Mart) ke peta
+        L.geoJSON(pointsGeoJSON, {
+            onEachFeature: function (feature, layer) {
+                if (feature.properties && feature.properties.name) {
+                    layer.bindPopup("<b>" + feature.properties.name + "</b>");
+                }
+            }
+        }).addTo(map);
+    </script>
+</body>
+
+</html>
+
+</html>
